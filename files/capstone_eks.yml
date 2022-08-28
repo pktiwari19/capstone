@@ -20,7 +20,7 @@ Parameters:
     Description: Name of an existing EC2 key pair (for SSH-access to the worker node instances)
     Type: String
     Default: udacity
-	
+
 Mappings:
   EksAmiIds:    
     us-east-1:
