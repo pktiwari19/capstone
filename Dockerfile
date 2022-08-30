@@ -12,4 +12,4 @@ RUN pip install --upgrade --no-cache-dir pip==22.2.2 &&\
 EXPOSE 80
 
 # command to run on container start
-CMD [ "python", "app.py" ]
+CMD [ "python", "application.py" ]
