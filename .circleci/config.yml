@@ -52,20 +52,7 @@ jobs:
             - checkout
             - setup_remote_docker:
                 version: 20.10.14
-            # Download and cache dependencies
-#            - restore_cache:
-#                keys:
-#                    - v1-dependencies-{{ checksum "requirements.txt" }}
-                    # fallback to using the latest cache if no exact match is found
-#                    - v1-dependencies-
-#            - run:
-#                name: install aws cli
-#                command: |
-#                    sudo apt-get install zip
-#                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#                    unzip awscliv2.zip
-#                    sudo ./aws/install
-                    
+                
             - run:
                 name: build docker image
                 command: |
@@ -87,12 +74,6 @@ jobs:
 
         steps:
             - checkout
-            # Download and cache dependencies
-            - restore_cache:
-                keys:
-                    - v1-dependencies-{{ checksum "requirements.txt" }}
-                    # fallback to using the latest cache if no exact match is found
-                    - v1-dependencies-
             
             - run:
                 name: install kubectl
@@ -100,6 +81,7 @@ jobs:
                     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
                     sudo install -m 0755 kubectl /usr/bin/kubectl
                     kubectl version --client
+                    
             - run:
                 name: update kube config
                 command: |
@@ -118,10 +100,52 @@ jobs:
                 name: deploy service
                 command: |
                     kubectl apply -f service.yaml
-                    kubectl get services
-                    kubectl get pods -o wide
-    smoketest:
-    switchtogreen:
+                    kubectl get svc
+    smoke_test:
+        docker:
+            - image: cimg/aws:2022.06
+        
+        working_directory: ~/repo
+
+        steps:
+            - checkout
+            - run:
+                name: install kubectl
+                command: |
+                    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                    sudo install -m 0755 kubectl /usr/bin/kubectl
+                    aws eks --region us-east-1 update-kubeconfig --name capstoneProj
+            - run:
+                name: test the url
+                command: |
+                    export url="kubectl service capstoneprojR1 --url"
+                    curl -v $url
+                    
+                    
+    switch_to_green:
+        docker:
+            - image: cimg/aws:2022.06
+        
+        working_directory: ~/repo
+
+        steps:
+            - checkout
+            - run:
+                name: install kubectl
+                command: |
+                    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                    sudo install -m 0755 kubectl /usr/bin/kubectl
+                    aws eks --region us-east-1 update-kubeconfig --name capstoneProj
+            - run:
+                name: switch to green env
+                command: |
+                    kubectl delete deployment capstoneproj
+                    kubectl get deployments
+                    kubectl delete svc capstoneproj
+                    kubectl get svc
+                    kubectl apply -f deploymentGreen.yml
+                    kubectl get deployments
+                    kubectl apply -f serviceGreen.yml
 
 workflows:
     default:
@@ -129,5 +153,10 @@ workflows:
             - build
             - create_image:
                 requires: [build]
-#            - deploy_app:
-#                requires: [create_image]
+            - deploy_app:
+                requires: [create_image]
+		- smoke_test
+		    requires: [deploy_app]
+		- switch_to_green
+		    requires: [deploy_app, smoke_test]
+		
