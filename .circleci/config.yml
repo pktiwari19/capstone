@@ -59,8 +59,8 @@ jobs:
             - run:
                 name: install docker
                 command: |
-                    sudo yum update -y
-                    sudo yum install docker-engine -y
+                    sudo apt-get update
+                    sudo sudo apt-get install docker-ce docker-ce-cli containerd.io
                     sudo service docker start
                     
             - run:
