@@ -97,6 +97,7 @@ jobs:
             - run:
                 name: update kube config
                 command: |
+                    mkdir ~/.kube
                     touch ~/.kube/config
                     aws eks --region us-east-1 update-kubeconfig --name capstoneProj
             
