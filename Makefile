@@ -9,7 +9,7 @@ install:
 	chmod +x ./hadolint
 
 test:
-	python3 -m pytest test_app.py
+	python -m pytest test_app.py
 
 lint:
 	./hadolint Dockerfile
