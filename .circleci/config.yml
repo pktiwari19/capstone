@@ -113,3 +113,12 @@ jobs:
                     kubectl get pods -o wide
     smoketest:
     switchtogreen:
+
+workflows:
+    default:
+        jobs:
+            - build
+            - create_image:
+                requires: [build]
+#            - deploy_app:
+#                requires: [create_image]
