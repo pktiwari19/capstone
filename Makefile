@@ -9,7 +9,7 @@ install:
 	chmod +x ./hadolint
 
 test:
-	#python -m pytest -vv --cov=myrepolib tests/*.py
+	python -m pytest test_app.py
 
 lint:
 	./hadolint Dockerfile

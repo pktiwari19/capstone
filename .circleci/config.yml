@@ -2,7 +2,6 @@ version: 2
 jobs:
     build:
         docker:
-            # Use the same Docker base as the project
             - image: python:3.7.3-stretch
 
         working_directory: ~/repo
@@ -15,6 +14,7 @@ jobs:
                     - v1-dependencies-{{ checksum "requirements.txt" }}
                     # fallback to using the latest cache if no exact match is found
                     - v1-dependencies-
+            
             - run:
                 name: install dependencies
                 command: |
@@ -24,20 +24,94 @@ jobs:
                     # Install hadolint
                     wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
                     chmod +x /bin/hadolint
+                    
             - save_cache:
                 paths: [./venv]
                 key: v1-dependencies-{{ checksum "requirements.txt" }}
-
+                
             # run lint!
             - run:
                 name: run lint
                 command: |
                     . venv/bin/activate
                     make lint
-    test:
-    deploy-application:
+                
+            - run:
+                name: run tests
+                command: |
+                    . venv/bin/activate
+                    make test
+    
+    create_image:
+        docker:
+            - image: cimg/aws:2022.06
+        
+        working_directory: ~/repo
+
+        steps:
+            - checkout
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "requirements.txt" }}
+                    # fallback to using the latest cache if no exact match is found
+                    - v1-dependencies-
+            
+            - run:
+                name: build and tag image
+                command: |
+                    docker build --tag=capstone .
+                    docker image ls
+            
+            - run:
+                name: tag the image and upload to ECR
+                command: |
+                #authenticate
+                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 237863785462.dkr.ecr.us-east-1.amazonaws.com
+                #tag image
+                docker tag capstone:latest 237863785462.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+                #push image
+                docker push 237863785462.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+        
+    deploy_app:   
+        docker:
+            - image: cimg/aws:2022.06
+        
+        working_directory: ~/repo
+
+        steps:
+            - checkout
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "requirements.txt" }}
+                    # fallback to using the latest cache if no exact match is found
+                    - v1-dependencies-
+            
+            - run:
+                name: install kubectl
+                command: |
+                    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                    sudo install -m 0755 kubectl /usr/bin/kubectl
+                    kubectl version --client
+            - run:
+                name: update kube config
+                command: |
+                    touch ~/.kube/config
+                    aws eks --region us-east-1 update-kubeconfig --name capstoneProj
+            
+            - run:
+                name: deploy the app 
+                command: |
+                    kubectl get nodes
+                    kubectl apply -f deployment.yaml
+                    kubectl get deployments
+            
+            - run:
+                name: deploy service
+                command: |
+                    kubectl apply -f service.yaml
+                    kubectl get services
+                    kubectl get pods -o wide
     smoketest:
     switchtogreen:
-    
-    
-                name: 
