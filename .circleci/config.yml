@@ -76,7 +76,7 @@ jobs:
                 name: upload to ECR
                 command: |
                     aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 237863785462.dkr.ecr.us-east-1.amazonaws.com
-                    docker tag capstone:latest 237863785462.dkr.ecr.us-east-1.amazonaws.com/capstoneproj:latest
+                    docker tag capstoneproj:latest 237863785462.dkr.ecr.us-east-1.amazonaws.com/capstoneproj:latest
                     docker push 237863785462.dkr.ecr.us-east-1.amazonaws.com/capstoneproj:latest
         
     deploy_app:   
