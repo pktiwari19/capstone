@@ -1,8 +1,10 @@
 from flask import Flask
 from flask import json
 import logging
+from flask.logging import create_logger
 
 app = Flask(__name__)
+log = create_logger(app)
 
 @app.route('/status')
 def healthcheck():
@@ -12,7 +14,7 @@ def healthcheck():
             mimetype='application/json'
     )
 
-    app.logger.info('Status request successfull')
+    log.info('Status request successfull')
     return response
 
 @app.route('/metrics')
@@ -23,12 +25,12 @@ def metrics():
             mimetype='application/json'
     )
 
-    app.logger.info('Metrics request successfull')
+    log.info('Metrics request successfull')
     return response
 
 @app.route("/")
 def hello():
-    app.logger.info('Main request successfull')
+    log.info('Main request successfull')
 
     return "Hello World!"
 
