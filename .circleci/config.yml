@@ -110,8 +110,8 @@ jobs:
                     kubectl apply -f /home/circleci/project/files/service.yml
                     kubectl get svc
     smoke_test:
-        machine:
-            - image: ubuntu-2004:202201-02
+        docker:
+            - image: cimg/base:2021.04
         
         working_directory: ~/project
         steps:
