@@ -1,4 +1,14 @@
 version: 2.1
+
+commands:
+    delete_deployments:
+    steps:
+      - run:
+          name: Destroy environment 
+          when: on_fail
+          command: |
+            kubectl delete deployment capstoneproj-r1
+            kubectl delete service capstoneproj-r1
 jobs:
     build:
         docker:
@@ -110,7 +120,7 @@ jobs:
             - run:
                 name: install commands
                 command: |
-                    apt-get install -y awk
+                    sudo apt-get install -y awk
                     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
                     sudo install -m 0755 kubectl /usr/bin/kubectl
                     aws eks --region us-east-1 update-kubeconfig --name capstoneProj
@@ -119,7 +129,7 @@ jobs:
                 command: |
                     export url="kubectl get svc capstoneproj-r1 | awk 'NR==2 {print $4}'"
                     curl -v ${url}:8080
-                    
+            - delete_deployments        
                     
     switch_to_green:
         docker:
@@ -145,6 +155,7 @@ jobs:
                     kubectl apply -f /home/circleci/project/files/deploymentGreen.yml
                     kubectl get deployments
                     kubectl apply -f /home/circleci/project/files/serviceGreen.yml
+            - delete_deployments
 
 workflows:
     default:
@@ -158,3 +169,4 @@ workflows:
                 requires: [deploy_app]
             - switch_to_green:
                 requires: [deploy_app, smoke_test]
+-
