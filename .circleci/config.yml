@@ -1,13 +1,13 @@
 version: 2.1
 commands:
     delete_deployments:
-    steps:
-      - run:
-          name: Destroy environment 
-          when: on_fail
-          command: |
-            kubectl delete deployment capstoneproj-r1
-            kubectl delete service capstoneproj-r1
+        steps:
+            - run:
+                name: Destroy environment 
+                when: on_fail
+                command: |
+                    kubectl delete deployment capstoneproj-r1
+                    kubectl delete service capstoneproj-r1
 jobs:
     build:
         docker:
