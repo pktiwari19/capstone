@@ -123,7 +123,6 @@ jobs:
                     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
                     sudo install -m 0755 kubectl /usr/bin/kubectl
                     aws eks update-kubeconfig --name capstoneProj --region us-east-1
-                    sed -i 's/*********/us-east-1/' ~/.kube/config
                     #install aws cli
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                     unzip awscliv2.zip
@@ -131,7 +130,10 @@ jobs:
             - run:
                 name: test the url
                 command: |
-                    export url=`kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'`
+                    export dns=`kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'`
+                    echo ${dns} > ./temp.txt
+                    sed -i 's/*********/us-east-1/' ./temp.txt
+                    export url=`cat ./temp.txt`
                     echo ${url}
                     curl -v http://${url}:8080
             - delete_deployments        
