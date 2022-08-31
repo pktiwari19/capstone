@@ -130,8 +130,9 @@ jobs:
             - run:
                 name: test the url
                 command: |
-                    export url="kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'"
-                    curl -v ${url}:8080
+                    export url=`kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'`
+                    echo $url
+                    curl -v $url:8080
             - delete_deployments        
                     
     switch_to_green:
