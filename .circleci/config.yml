@@ -92,13 +92,13 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply -f /home/circleci/project/deployment.yml
+                    kubectl apply -f /home/circleci/project/files/deployment.yml
                     kubectl get deployments
             
             - run:
                 name: deploy service
                 command: |
-                    kubectl apply -f /home/circleci/project/service.yml
+                    kubectl apply -f /home/circleci/project/files/service.yml
                     kubectl get svc
     smoke_test:
         docker:
@@ -142,9 +142,9 @@ jobs:
                     kubectl get deployments
                     kubectl delete svc capstoneproj
                     kubectl get svc
-                    kubectl apply -f /home/circleci/project/deploymentGreen.yml
+                    kubectl apply -f /home/circleci/project/files/deploymentGreen.yml
                     kubectl get deployments
-                    kubectl apply -f /home/circleci/project//serviceGreen.yml
+                    kubectl apply -f /home/circleci/project/files/serviceGreen.yml
 
 workflows:
     default:
