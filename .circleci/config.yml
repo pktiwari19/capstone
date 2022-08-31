@@ -130,9 +130,9 @@ jobs:
             - run:
                 name: test the url
                 command: |
-                    export dns=`kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'`| cut -d "." -f1
+                    export dns="kubectl get svc capstoneproj-r1 | awk 'NR==2 {print $4}'| cut -d "." -f1"
                     echo ${dns}
-                    curl -v http://${dns}.${AWS_DEFAULT_REGION}.amazonaws.com:8080
+                    `curl -v http://${dns}.us-east-1.amazonaws.com:8080`
             - delete_deployments        
                     
     switch_to_green:
