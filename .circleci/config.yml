@@ -155,7 +155,7 @@ workflows:
                 requires: [build]
             - deploy_app:
                 requires: [create_image]
-            - smoke_test
+            - smoke_test:
                 requires: [deploy_app]
-            - switch_to_green
+            - switch_to_green:
                 requires: [deploy_app, smoke_test]
