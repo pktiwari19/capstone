@@ -74,7 +74,6 @@ jobs:
 
         steps:
             - checkout
-            
             - run:
                 name: install kubectl
                 command: |
@@ -93,13 +92,13 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply -f ~/repo/deployment.yaml
+                    kubectl apply -f capstone/deployment.yaml
                     kubectl get deployments
             
             - run:
                 name: deploy service
                 command: |
-                    kubectl apply -f ~/repo/service.yaml
+                    kubectl apply -f capstone/service.yaml
                     kubectl get svc
     smoke_test:
         docker:
@@ -143,9 +142,9 @@ jobs:
                     kubectl get deployments
                     kubectl delete svc capstoneproj
                     kubectl get svc
-                    kubectl apply -f ./deploymentGreen.yml
+                    kubectl apply -f capstone/deploymentGreen.yml
                     kubectl get deployments
-                    kubectl apply -f ./serviceGreen.yml
+                    kubectl apply -f capstone/serviceGreen.yml
 
 workflows:
     default:
