@@ -130,10 +130,8 @@ jobs:
             - run:
                 name: test the url
                 command: |
-                    export dns=`kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'`
-                    echo ${dns} > ./temp.txt
-                    sed -i 's/*********/us-east-1/' ./temp.txt
-                    export url=`cat ./temp.txt`
+                    export dns=`kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'`| cut -d "." -f1
+                    export url=${dns}.us-east-1.elb.amazonaws.com
                     echo ${url}
                     curl -v http://${url}:8080
             - delete_deployments        
