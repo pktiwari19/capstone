@@ -165,6 +165,8 @@ jobs:
                     kubectl apply -f /home/circleci/project/files/deploymentGreen.yml
                     kubectl get deployments
                     kubectl apply -f /home/circleci/project/files/serviceGreen.yml
+                    kubectl delete deployment capstoneproj-r1
+                    kubectl delete service capstoneproj-r1
             - delete_deployments
 
 workflows:
