@@ -168,8 +168,8 @@ workflows:
   #          - build
   #          - create_image:
   #              requires: [build]
-            - deploy_app:
-                requires: [create_image]
+            - deploy_app
+  #             requires: [create_image]
             - smoke_test:
                 requires: [deploy_app]
   #          - switch_to_green:
