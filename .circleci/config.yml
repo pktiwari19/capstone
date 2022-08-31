@@ -93,13 +93,13 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply -f deployment.yaml
+                    kubectl apply -f ./deployment.yaml
                     kubectl get deployments
             
             - run:
                 name: deploy service
                 command: |
-                    kubectl apply -f service.yaml
+                    kubectl apply -f ./service.yaml
                     kubectl get svc
     smoke_test:
         docker:
@@ -118,8 +118,8 @@ jobs:
             - run:
                 name: test the url
                 command: |
-                    export url="kubectl service capstoneprojR1 --url"
-                    curl -v $url
+                    export url="kubectl get svc capstoneprojR1 | awk 'NR==2 {print $4}'"
+                    curl -v ${url}:8080
                     
                     
     switch_to_green:
@@ -143,9 +143,9 @@ jobs:
                     kubectl get deployments
                     kubectl delete svc capstoneproj
                     kubectl get svc
-                    kubectl apply -f deploymentGreen.yml
+                    kubectl apply -f ./deploymentGreen.yml
                     kubectl get deployments
-                    kubectl apply -f serviceGreen.yml
+                    kubectl apply -f ./serviceGreen.yml
 
 workflows:
     default:
