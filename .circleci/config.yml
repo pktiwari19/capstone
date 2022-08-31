@@ -69,9 +69,7 @@ jobs:
     deploy_app:   
         docker:
             - image: cimg/aws:2022.06
-        
-        working_directory: ~/repo
-
+            
         steps:
             - checkout
             - run:
@@ -92,13 +90,13 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply -f ~/repo/capstone/deployment.yaml
+                    kubectl apply -f capstone/deployment.yaml
                     kubectl get deployments
             
             - run:
                 name: deploy service
                 command: |
-                    kubectl apply -f ~/repo/capstone/service.yaml
+                    kubectl apply -f capstone/service.yaml
                     kubectl get svc
     smoke_test:
         docker:
@@ -124,9 +122,7 @@ jobs:
     switch_to_green:
         docker:
             - image: cimg/aws:2022.06
-        
-        working_directory: ~/repo
-
+            
         steps:
             - checkout
             - run:
@@ -142,9 +138,9 @@ jobs:
                     kubectl get deployments
                     kubectl delete svc capstoneproj
                     kubectl get svc
-                    kubectl apply -f ~/repo/capstone/deploymentGreen.yml
+                    kubectl apply -f capstone/deploymentGreen.yml
                     kubectl get deployments
-                    kubectl apply -f ~/repo/capstone/serviceGreen.yml
+                    kubectl apply -f capstone/serviceGreen.yml
 
 workflows:
     default:
