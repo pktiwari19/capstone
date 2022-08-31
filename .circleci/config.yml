@@ -159,4 +159,3 @@ workflows:
                 requires: [deploy_app]
             - switch_to_green
                 requires: [deploy_app, smoke_test]
-		
