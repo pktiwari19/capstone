@@ -130,6 +130,7 @@ jobs:
                 name: test the url
                 command: |
                     aws eks update-kubeconfig --name capstoneProj --region us-east-1
+                    cat ~/.kube/config
                     export url=`kubectl get svc capstoneproj-r1 | mawk 'NR==2 {print $4}'`
                     echo ${url}
                     curl -v http://${url}:8080
@@ -164,12 +165,12 @@ jobs:
 workflows:
     default:
         jobs:
-            - build
-            - create_image:
-                requires: [build]
+  #          - build
+  #          - create_image:
+  #              requires: [build]
             - deploy_app:
                 requires: [create_image]
             - smoke_test:
                 requires: [deploy_app]
-            - switch_to_green:
-                requires: [deploy_app, smoke_test]
+  #          - switch_to_green:
+  #              requires: [deploy_app, smoke_test]
