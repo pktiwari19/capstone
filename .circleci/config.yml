@@ -133,12 +133,12 @@ jobs:
                     export dns=`kubectl get svc capstoneproj-r1 | awk 'NR==2 {print $4}'`
                     echo ${dns}
                     export url=http://${dns}:8080
-                    if curl "${url}" | grep "ok"
-                    then
-                    return 0
-                    else
-                    return 0
-                    fi
+#                    if curl "${url}" | grep "ok"
+#                    then
+#                    return 0
+#                    else
+#                    return 1
+#                    fi
             - delete_deployments        
                     
     switch_to_green:
