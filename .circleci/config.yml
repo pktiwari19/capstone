@@ -105,12 +105,11 @@ jobs:
             - image: cimg/aws:2022.06
         
         working_directory: ~/project
-
-        steps:
-            - checkout
+        
             - run:
-                name: install kubectl
+                name: install commands
                 command: |
+                    apt-get install -y awk
                     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
                     sudo install -m 0755 kubectl /usr/bin/kubectl
                     aws eks --region us-east-1 update-kubeconfig --name capstoneProj
