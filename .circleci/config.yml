@@ -173,7 +173,7 @@ workflows:
             - build
             - create_image:
                 requires: [build]
-            - deploy_app
+            - deploy_app:
                requires: [create_image]
             - smoke_test:
                 requires: [deploy_app]
