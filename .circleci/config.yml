@@ -93,13 +93,13 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply -f ./deployment.yaml
+                    kubectl apply -f ~/repo/deployment.yaml
                     kubectl get deployments
             
             - run:
                 name: deploy service
                 command: |
-                    kubectl apply -f ./service.yaml
+                    kubectl apply -f ~/repo/service.yaml
                     kubectl get svc
     smoke_test:
         docker:
