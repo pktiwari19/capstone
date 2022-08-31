@@ -1,5 +1,4 @@
 version: 2.1
-
 commands:
     delete_deployments:
     steps:
@@ -169,4 +168,3 @@ workflows:
                 requires: [deploy_app]
             - switch_to_green:
                 requires: [deploy_app, smoke_test]
--
