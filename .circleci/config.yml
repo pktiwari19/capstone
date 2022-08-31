@@ -92,7 +92,7 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply ./project/deployment.yml
+                    kubectl apply -f ./project/deployment.yml
                     kubectl get deployments
             
             - run:
