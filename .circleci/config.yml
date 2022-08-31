@@ -70,6 +70,8 @@ jobs:
         docker:
             - image: cimg/aws:2022.06
             
+        working_directory: ~/project
+        
         steps:
             - checkout
             - run:
@@ -90,19 +92,22 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply -f ~/project/deployment.yaml
+                    pwd
+                    cd
+                    find . -name "deployment.yml"
+                    kubectl apply deployment.yaml
                     kubectl get deployments
             
             - run:
                 name: deploy service
                 command: |
-                    kubectl apply -f ~/project/service.yaml
+                    kubectl apply -f service.yaml
                     kubectl get svc
     smoke_test:
         docker:
             - image: cimg/aws:2022.06
         
-        working_directory: ~/repo
+        working_directory: ~/project
 
         steps:
             - checkout
