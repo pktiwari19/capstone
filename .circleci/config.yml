@@ -90,13 +90,13 @@ jobs:
                 name: deploy the app 
                 command: |
                     kubectl get nodes
-                    kubectl apply -f capstone/deployment.yaml
+                    kubectl apply -f ~/project/deployment.yaml
                     kubectl get deployments
             
             - run:
                 name: deploy service
                 command: |
-                    kubectl apply -f capstone/service.yaml
+                    kubectl apply -f ~/project/service.yaml
                     kubectl get svc
     smoke_test:
         docker:
@@ -138,9 +138,9 @@ jobs:
                     kubectl get deployments
                     kubectl delete svc capstoneproj
                     kubectl get svc
-                    kubectl apply -f capstone/deploymentGreen.yml
+                    kubectl apply -f ~/project/deploymentGreen.yml
                     kubectl get deployments
-                    kubectl apply -f capstone/serviceGreen.yml
+                    kubectl apply -f ~/project/serviceGreen.yml
 
 workflows:
     default:
