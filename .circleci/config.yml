@@ -105,7 +105,8 @@ jobs:
             - image: cimg/aws:2022.06
         
         working_directory: ~/project
-        
+        steps:
+            - checkout
             - run:
                 name: install commands
                 command: |
